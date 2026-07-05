@@ -27,3 +27,13 @@ jobs:
             "${{ secrets.JURNAL_SUPABASE_URL }}/rest/v1/${{ secrets.JURNAL_TABLE_NAME }}?select=id&limit=1" \
             -H "apikey: ${{ secrets.JURNAL_SUPABASE_KEY }}" \
             -H "Authorization: Bearer ${{ secrets.JURNAL_SUPABASE_KEY }}"
+
+  ping-printpro:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase - PrintPro Digital
+        run: |
+          curl -s -o /dev/null -w "PrintPro status: %{http_code}\n" \
+            "${{ secrets.PRINTPRO_SUPABASE_URL }}/rest/v1/${{ secrets.PRINTPRO_TABLE_NAME }}?select=id&limit=1" \
+            -H "apikey: ${{ secrets.PRINTPRO_SUPABASE_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.PRINTPRO_SUPABASE_KEY }}"
