@@ -1,0 +1,29 @@
+name: Supabase Keep-Alive
+
+# Jalan otomatis tiap 3 hari (lebih rapat dari batas 7 hari Supabase, jadi ada margin aman)
+# Bisa juga dijalankan manual lewat tab "Actions" di GitHub
+on:
+  schedule:
+    - cron: "0 3 */3 * *"   # tiap 3 hari jam 03:00 UTC (≈10:00 WIB)
+  workflow_dispatch:
+
+jobs:
+  ping-rekap-absen:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase - RekapAbsen
+        run: |
+          curl -s -o /dev/null -w "RekapAbsen status: %{http_code}\n" \
+            "${{ secrets.ABSEN_SUPABASE_URL }}/rest/v1/${{ secrets.ABSEN_TABLE_NAME }}?select=id&limit=1" \
+            -H "apikey: ${{ secrets.ABSEN_SUPABASE_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.ABSEN_SUPABASE_KEY }}"
+
+  ping-jurnal-guru:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase - Jurnal Guru Digital
+        run: |
+          curl -s -o /dev/null -w "Jurnal Guru status: %{http_code}\n" \
+            "${{ secrets.JURNAL_SUPABASE_URL }}/rest/v1/${{ secrets.JURNAL_TABLE_NAME }}?select=id&limit=1" \
+            -H "apikey: ${{ secrets.JURNAL_SUPABASE_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.JURNAL_SUPABASE_KEY }}"
